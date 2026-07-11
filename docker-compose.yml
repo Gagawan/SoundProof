@@ -1,0 +1,24 @@
+# Environnement de DÉVELOPPEMENT : seule la base de données est dockerisée.
+# L'API tourne en local avec hot-reload (npm run dev) et l'app mobile via Expo.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: soundproof-db
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-soundproof}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-soundproof_password}
+      POSTGRES_DB: ${POSTGRES_DB:-soundproof}
+    volumes:
+      - soundproof_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-soundproof} -d ${POSTGRES_DB:-soundproof}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  soundproof_db_data:
