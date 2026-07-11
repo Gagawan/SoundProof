@@ -8,24 +8,24 @@
 
 Deux rôles existent : `ADMIN` (gère les salles, le matériel et toutes les réservations) et `MEMBER` (réserve, chatte, gère ses propres réservations).
 
-> Projet réalisé dans le cadre de la validation du **Bloc 2 du titre RNCP 39583 « Expert en Développement Logiciel »** : *Concevoir et développer des applications logicielles*.
+> Projet réalisé dans le cadre de la validation du **Bloc 2 du titre RNCP 39583 « Expert en Développement Logiciel »** : _Concevoir et développer des applications logicielles_.
 
 ## Stack technique
 
-| Couche | Technologie |
-|---|---|
-| Application mobile | React Native avec **Expo** (TypeScript) + **Expo Router** |
-| Data-fetching mobile | TanStack Query (React Query) v5 + Axios |
-| Stockage sécurisé mobile | expo-secure-store (tokens) |
-| Backend | **NestJS** (TypeScript) |
-| Base de données | **PostgreSQL 16** (Docker) |
-| ORM | **Prisma** |
-| Temps réel | **Socket.IO** (`@nestjs/websockets` côté serveur, `socket.io-client` côté mobile) |
-| Authentification | JWT (access + refresh tokens), hachage **argon2** |
-| Tests | Jest + Supertest (backend), Jest + React Native Testing Library (mobile), Maestro (E2E mobile) |
-| Qualité | ESLint, Prettier, Husky + lint-staged, commitlint |
-| CI/CD | GitHub Actions + EAS Build (Expo Application Services) |
-| Conteneurisation | Docker + Docker Compose |
+| Couche                   | Technologie                                                                                    |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Application mobile       | React Native avec **Expo** (TypeScript) + **Expo Router**                                      |
+| Data-fetching mobile     | TanStack Query (React Query) v5 + Axios                                                        |
+| Stockage sécurisé mobile | expo-secure-store (tokens)                                                                     |
+| Backend                  | **NestJS** (TypeScript)                                                                        |
+| Base de données          | **PostgreSQL 16** (Docker)                                                                     |
+| ORM                      | **Prisma**                                                                                     |
+| Temps réel               | **Socket.IO** (`@nestjs/websockets` côté serveur, `socket.io-client` côté mobile)              |
+| Authentification         | JWT (access + refresh tokens), hachage **argon2**                                              |
+| Tests                    | Jest + Supertest (backend), Jest + React Native Testing Library (mobile), Maestro (E2E mobile) |
+| Qualité                  | ESLint, Prettier, Husky + lint-staged, commitlint                                              |
+| CI/CD                    | GitHub Actions + EAS Build (Expo Application Services)                                         |
+| Conteneurisation         | Docker + Docker Compose                                                                        |
 
 ## Structure du dépôt
 
@@ -51,17 +51,20 @@ SoundProof/
 # 1. Cloner le dépôt
 git clone <url-du-depot> && cd SoundProof
 
-# 2. Configurer les environnements (puis éditer les valeurs)
+# 2. Installer l'outillage racine (hooks git Husky + commitlint)
+npm install
+
+# 3. Configurer les environnements (puis éditer les valeurs)
 cp backend/.env.example backend/.env
 cp mobile/.env.example mobile/.env
 
-# 3. Démarrer la base de données
+# 4. Démarrer la base de données
 docker compose up -d
 
-# 4. Démarrer l'API
+# 5. Démarrer l'API
 cd backend && npm install && npx prisma migrate dev && npm run dev
 
-# 5. Démarrer l'application mobile (dans un autre terminal)
+# 6. Démarrer l'application mobile (dans un autre terminal)
 cd mobile && npm install && npm run dev
 ```
 
@@ -71,10 +74,10 @@ Scannez ensuite le QR code avec **Expo Go** (téléphone) ou lancez l'app sur l'
 
 L'application mobile tourne sur un téléphone ou un émulateur : elle ne peut **pas** joindre l'API via `localhost`. Dans `mobile/.env`, configurez `EXPO_PUBLIC_API_URL` selon votre cas :
 
-| Cas | Valeur de `EXPO_PUBLIC_API_URL` |
-|---|---|
+| Cas                                                   | Valeur de `EXPO_PUBLIC_API_URL`                                                                                  |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | Téléphone physique (Expo Go) sur le même réseau Wi-Fi | `http://<IP-locale-de-votre-machine>:3000` (ex. `http://192.168.1.42:3000`, obtenue via `ipconfig` / `ifconfig`) |
-| Émulateur Android | `http://10.0.2.2:3000` (alias de la machine hôte vu depuis l'émulateur) |
+| Émulateur Android                                     | `http://10.0.2.2:3000` (alias de la machine hôte vu depuis l'émulateur)                                          |
 
 ## Stratégie de branches (Git Flow simplifié)
 
