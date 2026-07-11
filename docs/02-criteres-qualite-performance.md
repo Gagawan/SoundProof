@@ -47,11 +47,11 @@
 
 ### 2.3 Gestion des sources et des données
 
-| Élément                   | Choix             | Détail                                                                                                     |
-| ------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| Gestion de sources        | **git + GitHub**  | Branches `main` / `develop` / `feat                                                                        | fix | docs | chore/*`, Conventional Commits, tags SemVer (voir README) |
-| Base de données           | **PostgreSQL 16** | Dockerisée en développement (port 5432, volume nommé, healthcheck `pg_isready`)                            |
-| ORM / gestionnaire de BDD | **Prisma**        | Migrations versionnées (`prisma/migrations/`), interface graphique **Prisma Studio** (`npx prisma studio`) |
+| Élément                   | Choix             | Détail                                                                                                                                      |
+| ------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gestion de sources        | **git + GitHub**  | Branches `main` / `develop` / branches de travail (`feat/…`, `fix/…`, `docs/…`, `chore/…`), Conventional Commits, tags SemVer (voir README) |
+| Base de données           | **PostgreSQL 16** | Dockerisée en développement (port 5432, volume nommé, healthcheck `pg_isready`)                                                             |
+| ORM / gestionnaire de BDD | **Prisma**        | Migrations versionnées (`prisma/migrations/`), interface graphique **Prisma Studio** (`npx prisma studio`)                                  |
 
 ### 2.4 Outillage qualité intégré au poste de développeur
 
