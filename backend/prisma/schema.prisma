@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum EquipmentCategory {
+  AMPLIFIER
+  DRUMS
+  MICROPHONE
+  MIXER
+  KEYBOARD
+  GUITAR
+  BASS
+  OTHER
+}
+
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  role             Role      @default(MEMBER)
+  refreshTokenHash String?
+  createdAt        DateTime  @default(now())
+  bookings         Booking[]
+  messages         Message[]
+}
+
+model Room {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String
+  capacity    Int
+  isActive    Boolean     @default(true)
+  equipments  Equipment[]
+  bookings    Booking[]
+  messages    Message[]
+}
+
+model Equipment {
+  id                String             @id @default(uuid())
+  name              String
+  category          EquipmentCategory
+  roomId            String
+  room              Room               @relation(fields: [roomId], references: [id])
+  isActive          Boolean            @default(true)
+  bookingEquipments BookingEquipment[]
+}
+
+model Booking {
+  id         String             @id @default(uuid())
+  userId     String
+  user       User               @relation(fields: [userId], references: [id])
+  roomId     String
+  room       Room               @relation(fields: [roomId], references: [id])
+  startsAt   DateTime
+  endsAt     DateTime
+  status     BookingStatus      @default(CONFIRMED)
+  createdAt  DateTime           @default(now())
+  equipments BookingEquipment[]
+
+  @@index([roomId, startsAt, endsAt])
+}
+
+model BookingEquipment {
+  bookingId   String
+  booking     Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+
+  @@id([bookingId, equipmentId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([roomId, createdAt])
+}
