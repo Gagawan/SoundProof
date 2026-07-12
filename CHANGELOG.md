@@ -14,3 +14,6 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 - Pipelines GitHub Actions (`ci.yml`, `cd.yml`), Dockerfile multi-stage de l'API, configuration EAS Build et Docker Compose de production.
 - Document d'architecture logicielle (`docs/04`) : choix techniques, modèle de données, user stories, maquettes.
 - Schéma Prisma complet (utilisateurs, salles, matériel, réservations, messages), migration initiale et seed de démonstration.
+- API complète : authentification JWT (argon2, refresh tokens hachés), gestion des salles et du matériel (CRUD admin, désactivation logique), réservations avec règles anti-chevauchement en transaction, chat temps réel Socket.IO avec historique paginé, healthcheck.
+- Durcissement sécurité : Helmet, rate limiting global et renforcé sur l'authentification, validation stricte des entrées, guards JWT/rôles globaux.
+- Harnais de tests unitaires backend (80 tests, seuils de couverture bloquants sur les services).
