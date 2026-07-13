@@ -1,0 +1,37 @@
+# A06 (Vulnerable and Outdated Components) — surveillance automatique des dépendances.
+# Dependabot ouvre des PR de mise à jour ; la CI les valide comme toute contribution.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /backend
+    schedule:
+      interval: weekly
+    labels: ['dependencies', 'backend']
+
+  - package-ecosystem: npm
+    directory: /mobile
+    schedule:
+      interval: weekly
+    labels: ['dependencies', 'mobile']
+    # Les paquets Expo doivent rester alignés sur la version de la SDK :
+    # leurs montées de version se font via `npx expo install --fix`, pas par Dependabot.
+    ignore:
+      - dependency-name: 'expo*'
+      - dependency-name: 'react-native*'
+      - dependency-name: 'react'
+      - dependency-name: 'react-dom'
+      - dependency-name: 'jest-expo'
+      - dependency-name: 'eslint-config-expo'
+      - dependency-name: '@expo/*'
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    labels: ['dependencies', 'tooling']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels: ['dependencies', 'ci']
