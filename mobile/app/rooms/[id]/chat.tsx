@@ -14,33 +14,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getRoom } from '@/api/rooms';
-import type { Message } from '@/api/types';
 import { EmptyState } from '@/components/EmptyState';
 import { Spinner } from '@/components/Spinner';
 import { useAuth } from '@/features/auth/auth-context';
+import { MessageBubble } from '@/features/chat/MessageBubble';
 import { useRoomChat } from '@/features/chat/use-room-chat';
-import { formatTime } from '@/lib/slots';
 import { colors, fontSizes, MIN_TOUCH_SIZE, radii, spacing } from '@/lib/theme';
 
 const MESSAGE_MAX_LENGTH = 1000;
-
-function MessageBubble({ message, isMine }: { message: Message; isMine: boolean }) {
-  const time = formatTime(new Date(message.createdAt));
-  return (
-    <View
-      accessibilityLabel={`${message.user.firstName} à ${time} : ${message.content}`}
-      style={[styles.bubble, isMine ? styles.bubbleMine : styles.bubbleOther]}
-    >
-      {!isMine && (
-        <Text style={styles.author}>
-          {message.user.firstName} {message.user.lastName}
-        </Text>
-      )}
-      <Text style={[styles.messageText, isMine && styles.messageTextMine]}>{message.content}</Text>
-      <Text style={[styles.time, isMine && styles.timeMine]}>{time}</Text>
-    </View>
-  );
-}
 
 export default function RoomChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -157,24 +138,6 @@ const styles = StyleSheet.create({
   dotOff: { backgroundColor: colors.danger },
   statusText: { fontSize: fontSizes.sm, color: colors.textMuted },
   list: { padding: spacing.md },
-  bubble: {
-    maxWidth: '80%',
-    borderRadius: radii.md,
-    padding: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  bubbleMine: { alignSelf: 'flex-end', backgroundColor: colors.primary },
-  bubbleOther: { alignSelf: 'flex-start', backgroundColor: colors.surface },
-  author: {
-    fontSize: fontSizes.sm,
-    fontWeight: '700',
-    color: colors.primary,
-    marginBottom: 2,
-  },
-  messageText: { fontSize: fontSizes.md, color: colors.text },
-  messageTextMine: { color: colors.onPrimary },
-  time: { fontSize: 11, color: colors.textMuted, alignSelf: 'flex-end', marginTop: 2 },
-  timeMine: { color: colors.selected },
   composer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
