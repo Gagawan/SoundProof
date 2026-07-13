@@ -18,3 +18,4 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 - Durcissement sécurité : Helmet, rate limiting global et renforcé sur l'authentification, validation stricte des entrées, guards JWT/rôles globaux.
 - Harnais de tests unitaires backend (80 tests, seuils de couverture bloquants sur les services).
 - Application mobile complète : authentification persistante (secure-store), liste et détail des salles avec grille hebdomadaire de créneaux, réservation avec matériel, gestion de ses réservations (annulation confirmée), chat temps réel par salle, administration (salles, matériel, réservations), accessibilité native sur tous les écrans.
+- Harnais de tests complet : 20 tests e2e API des parcours critiques (Supertest + PostgreSQL réelle) et 51 tests unitaires mobile (créneaux, schémas de validation, hook d'authentification, écrans de connexion et de réservation, messages de chat), seuils de couverture bloquants dans les deux applications.

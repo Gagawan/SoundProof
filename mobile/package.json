@@ -61,7 +61,21 @@
       "src/**/*.{ts,tsx}",
       "!src/**/*.d.ts",
       "!src/**/__tests__/**"
-    ]
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "json-summary"
+    ],
+    "coverageThreshold": {
+      "src/lib/**/*.ts": {
+        "lines": 80,
+        "branches": 80
+      },
+      "src/features/auth/**": {
+        "lines": 80
+      }
+    }
   },
   "private": true
 }
