@@ -19,3 +19,5 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 - Harnais de tests unitaires backend (80 tests, seuils de couverture bloquants sur les services).
 - Application mobile complète : authentification persistante (secure-store), liste et détail des salles avec grille hebdomadaire de créneaux, réservation avec matériel, gestion de ses réservations (annulation confirmée), chat temps réel par salle, administration (salles, matériel, réservations), accessibilité native sur tous les écrans.
 - Harnais de tests complet : 20 tests e2e API des parcours critiques (Supertest + PostgreSQL réelle) et 51 tests unitaires mobile (créneaux, schémas de validation, hook d'authentification, écrans de connexion et de réservation, messages de chat), seuils de couverture bloquants dans les deux applications.
+- Surveillance des dépendances par Dependabot (backend, mobile, outillage, actions GitHub).
+- Analyse de sécurité OWASP Top 10 (`docs/05`) et document d'accessibilité WCAG 2.1 AA / EN 301 549 (`docs/06`) avec contrastes du thème mesurés.
