@@ -22,3 +22,4 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 - Surveillance des dépendances par Dependabot (backend, mobile, outillage, actions GitHub).
 - Analyse de sécurité OWASP Top 10 (`docs/05`) et document d'accessibilité WCAG 2.1 AA / EN 301 549 (`docs/06`) avec contrastes du thème mesurés.
 - Cahier de recettes (`docs/07`) : 24 scénarios fonctionnels, 13 tests structurels et 8 tests de sécurité (exécutés : 8/8 OK), et flows Maestro automatisant 6 parcours clés (`mobile/e2e/`).
+- Plan de correction des bogues (`docs/08`) : processus de qualification et de traitement, registre des 9 anomalies rencontrées avec analyse de cause racine, et template GitHub de rapport de bogue.
