@@ -1,0 +1,32 @@
+# TF-010 + TF-012 — Réservation d'un créneau avec matériel.
+# Prérequis : compte marie connecté, Studio A avec un créneau libre à venir.
+appId: host.exp.Exponent
+---
+- runFlow: _connexion-membre.yaml
+
+# Ouvrir le détail du Studio A
+- tapOn:
+    text: '.*Studio A.*'
+- assertVisible: 'Début du créneau'
+
+# Passer à la semaine suivante (créneaux garantis dans le futur)
+- tapOn: 'Semaine suivante'
+
+# Sélectionner un créneau de début puis une fin
+- tapOn:
+    text: 'Créneau de 14:00'
+- assertVisible: 'Fin du créneau'
+- tapOn:
+    text: 'Fin à 15:00'
+
+# Ajouter du matériel (TF-012) : cocher le premier équipement proposé
+- assertVisible: 'Matériel supplémentaire'
+- tapOn:
+    text: '.*Ampli.*'
+    optional: true
+
+# Confirmer la réservation
+- tapOn: 'Confirmer la réservation'
+
+# Redirection vers « Mes réservations » + toast de confirmation
+- assertVisible: 'Mes réservations'

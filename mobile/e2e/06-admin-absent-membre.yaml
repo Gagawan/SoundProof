@@ -1,0 +1,11 @@
+# TF-021 — L'onglet Administration n'apparaît pas pour un membre.
+# Prérequis : compte marie (rôle MEMBER).
+appId: host.exp.Exponent
+---
+- runFlow: _connexion-membre.yaml
+
+# La barre d'onglets d'un membre : Salles, Réservations, Profil — jamais Admin.
+- assertVisible: 'Salles'
+- assertVisible: 'Réservations'
+- assertVisible: 'Profil'
+- assertNotVisible: 'Admin'

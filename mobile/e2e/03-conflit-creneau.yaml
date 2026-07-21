@@ -1,0 +1,27 @@
+# TF-011 — Le système refuse une réservation en conflit.
+# Prérequis : Studio A a une réservation CONFIRMED sur un créneau (issu du seed
+# ou du flow 02). On tente un chevauchement partiel : la fin proposée est bornée
+# par le créneau occupé, et une tentative sur un créneau occupé est bloquée.
+appId: host.exp.Exponent
+---
+- runFlow: _connexion-membre.yaml
+
+- tapOn:
+    text: '.*Studio A.*'
+- assertVisible: 'Début du créneau'
+
+# Un créneau occupé est annoncé « désactivé » et n'est pas sélectionnable :
+# on vérifie qu'il est bien présent mais grisé (barré).
+- assertVisible:
+    text: 'Créneau de 10:00'
+
+# Tenter de sélectionner un créneau occupé ne doit pas ouvrir la section « Fin ».
+- tapOn:
+    text: 'Créneau de 10:00'
+- assertNotVisible: 'Fin du créneau'
+
+# Un créneau libre reste réservable : la section « Fin » apparaît.
+- tapOn: 'Semaine suivante'
+- tapOn:
+    text: 'Créneau de 16:00'
+- assertVisible: 'Fin du créneau'

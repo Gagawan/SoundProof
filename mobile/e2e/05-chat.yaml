@@ -1,0 +1,22 @@
+# TF-016 — Accès au chat d'une salle réservée et envoi d'un message.
+# Prérequis : marie possède une réservation CONFIRMED sur le Studio A (seed).
+appId: host.exp.Exponent
+---
+- runFlow: _connexion-membre.yaml
+
+- tapOn:
+    text: '.*Studio A.*'
+- tapOn: '💬 Chat de la salle'
+
+# L'indicateur de connexion temps réel s'affiche
+- assertVisible: 'En ligne'
+
+# Envoyer un message
+- tapOn:
+    id: 'chat-input'
+- inputText: 'Bonjour depuis Maestro !'
+- tapOn:
+    id: 'chat-send'
+
+# Le message envoyé apparaît dans la conversation
+- assertVisible: 'Bonjour depuis Maestro !'
