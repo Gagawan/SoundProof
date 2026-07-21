@@ -21,3 +21,4 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 - Harnais de tests complet : 20 tests e2e API des parcours critiques (Supertest + PostgreSQL réelle) et 51 tests unitaires mobile (créneaux, schémas de validation, hook d'authentification, écrans de connexion et de réservation, messages de chat), seuils de couverture bloquants dans les deux applications.
 - Surveillance des dépendances par Dependabot (backend, mobile, outillage, actions GitHub).
 - Analyse de sécurité OWASP Top 10 (`docs/05`) et document d'accessibilité WCAG 2.1 AA / EN 301 549 (`docs/06`) avec contrastes du thème mesurés.
+- Cahier de recettes (`docs/07`) : 24 scénarios fonctionnels, 13 tests structurels et 8 tests de sécurité (exécutés : 8/8 OK), et flows Maestro automatisant 6 parcours clés (`mobile/e2e/`).

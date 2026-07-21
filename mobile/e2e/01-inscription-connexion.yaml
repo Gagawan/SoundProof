@@ -1,0 +1,49 @@
+# TF-001 + TF-004 — Inscription d'un nouveau compte puis reconnexion.
+# Prérequis : email ci-dessous non déjà utilisé (réinitialiser le seed si besoin).
+appId: host.exp.Exponent
+---
+- launchApp:
+    clearState: true
+
+# --- Inscription (TF-001) ---
+- assertVisible: 'SoundProof 🎸'
+- tapOn: "Pas de compte ? S’inscrire"
+- assertVisible: 'Créer un compte'
+
+- tapOn:
+    id: 'register-firstname'
+- inputText: 'Test'
+- tapOn:
+    id: 'register-lastname'
+- inputText: 'Maestro'
+- tapOn:
+    id: 'register-email'
+- inputText: 'maestro.e2e@soundproof.fr'
+- tapOn:
+    id: 'register-password'
+- inputText: 'MotDePasseFort1'
+- tapOn:
+    id: 'register-confirm'
+- inputText: 'MotDePasseFort1'
+- hideKeyboard
+- tapOn: 'Créer mon compte'
+
+# Arrivée dans l'app authentifiée : la barre d'onglets est visible
+- assertVisible: 'Salles'
+- assertVisible: 'Réservations'
+
+# --- Déconnexion puis reconnexion (TF-004) ---
+- tapOn: 'Profil'
+- tapOn: 'Se déconnecter'
+- tapOn: 'Se déconnecter' # confirmation du dialogue natif
+- assertVisible: 'Se connecter'
+
+- tapOn:
+    id: 'login-email'
+- inputText: 'maestro.e2e@soundproof.fr'
+- tapOn:
+    id: 'login-password'
+- inputText: 'MotDePasseFort1'
+- hideKeyboard
+- tapOn: 'Se connecter'
+- assertVisible: 'Salles'

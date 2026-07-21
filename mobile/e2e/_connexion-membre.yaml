@@ -1,0 +1,15 @@
+# Sous-flow réutilisable : connexion avec le compte de démonstration « marie ».
+appId: host.exp.Exponent
+---
+- launchApp:
+    clearState: true
+- assertVisible: 'Se connecter'
+- tapOn:
+    id: 'login-email'
+- inputText: 'marie@soundproof.fr'
+- tapOn:
+    id: 'login-password'
+- inputText: 'SoundProof2026!'
+- hideKeyboard
+- tapOn: 'Se connecter'
+- assertVisible: 'Salles'
