@@ -181,6 +181,18 @@ Anomalies réellement rencontrées pendant le développement. La colonne « Dét
 | **Test de non-régression**  | Seuils `coverageThreshold` **bloquants** dans la configuration Jest des deux applications : toute baisse de couverture fait échouer la CI.                                                                                                                                                                                                                                                                                                                                                    |
 | **Statut**                  | ✅ Corrigé                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
+### BUG-010 — Vulnérabilité de dépendance bloquant la publication de la v1.0.0
+
+| Champ                       | Contenu                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Origine**                 | CI / CD (audit de sécurité), au moment de la pose du tag `v1.0.0` (Phase 12)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **Description**             | Les jobs `Audit de sécurité des dépendances (backend)` de la CI **et** de la CD échouent : `npm audit --audit-level=high` remonte une vulnérabilité **haute** dans `fast-uri` (3.0.0 – 3.1.3, advisory GHSA-v2hh-gcrm-f6hx — _host confusion via literal backslash authority delimiter_). Le job mobile est annulé (jumeau de matrice), et les jobs de déploiement `deploy-api` / `build-mobile` sont **ignorés** : aucune release n'est produite.                                                                                                                                 |
+| **Gravité / composant**     | **Bloquant** (empêche la livraison de la version) / Infrastructure — dépendances                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **Analyse de cause racine** | `fast-uri` est une dépendance **transitive** (`@nestjs/cli` → `ajv` → `fast-uri`), présente uniquement dans l'outillage de développement et **absente de l'image de production** (retirée par `npm prune --omit=dev`). L'advisory a été **publié après le dernier passage vert de la CI** : le code du projet n'a pas changé, c'est l'état des bases de vulnérabilités qui a évolué. L'audit `--audit-level=high` étant **volontairement bloquant sur `main` et sur les tags** (politique OWASP A06), il a correctement empêché une livraison intégrant une dépendance vulnérable. |
+| **Correction**              | `npm audit fix` : montée transitive de `fast-uri` en **3.1.4** (corrigé), sans modification du code applicatif ni de version majeure. Backend ramené à **0 vulnérabilité**. Commit **`fix(backend): corrige la vulnérabilité fast-uri`** ; le tag `v1.0.0` est reposé sur le commit corrigé pour relancer le déploiement continu.                                                                                                                                                                                                                                                  |
+| **Test de non-régression**  | `npm audit --audit-level=high` **bloquant en CI sur `main` et les tags** : toute vulnérabilité haute ou critique réapparaissant dans l'arbre de dépendances fera de nouveau échouer le pipeline avant livraison. Surveillance continue par Dependabot.                                                                                                                                                                                                                                                                                                                             |
+| **Statut**                  | ✅ Corrigé — pipeline débloqué                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+
 ### Incidents d'environnement (hors code applicatif)
 
 | ID      | Description                                           | Analyse                                                                                                                   | Traitement                                                                                                                                      |
@@ -192,26 +204,27 @@ Anomalies réellement rencontrées pendant le développement. La colonne « Dét
 
 | Gravité    | Nombre | Corrigés | En cours |
 | ---------- | ------ | -------- | -------- |
-| Bloquant   | 2      | 2        | 0        |
+| Bloquant   | 3      | 3        | 0        |
 | Majeur     | 5      | 5        | 0        |
 | Mineur     | 2      | 2        | 0        |
 | Cosmétique | 0      | 0        | 0        |
-| **Total**  | **9**  | **9**    | **0**    |
+| **Total**  | **10** | **10**   | **0**    |
 
 **Répartition par source de détection**
 
-| Source                        | Bogues | Détail                                      |
-| ----------------------------- | ------ | ------------------------------------------- |
-| Outillage local (lint, tests) | 5      | BUG-004, BUG-005, BUG-006, BUG-007, BUG-008 |
-| Intégration continue          | 1      | BUG-001                                     |
-| Exécution de la couverture    | 1      | BUG-009                                     |
-| Installation de dépendances   | 1      | BUG-002                                     |
-| Test sur appareil réel        | 1      | BUG-003                                     |
+| Source                            | Bogues | Détail                                      |
+| --------------------------------- | ------ | ------------------------------------------- |
+| Outillage local (lint, tests)     | 5      | BUG-004, BUG-005, BUG-006, BUG-007, BUG-008 |
+| Intégration / déploiement continu | 2      | BUG-001, BUG-010                            |
+| Exécution de la couverture        | 1      | BUG-009                                     |
+| Installation de dépendances       | 1      | BUG-002                                     |
+| Test sur appareil réel            | 1      | BUG-003                                     |
 
 **Enseignements** :
 
-- Le dispositif qualité a détecté **100 %** de ces anomalies **avant toute livraison** ; aucune n'a atteint une version taguée.
+- Le dispositif qualité a détecté **100 %** de ces anomalies **avant toute livraison** ; aucune n'a atteint une version publiée.
 - **BUG-001 n'était détectable que par la CI** (divergence entre poste de développement et checkout propre) : il justifie à lui seul l'exigence d'un environnement d'intégration distinct du poste de travail.
+- **BUG-010 illustre la valeur de l'audit bloquant sur les tags** : une vulnérabilité publiée _après_ le dernier passage vert, dans une dépendance que le projet n'avait pas modifiée, a été interceptée au moment précis de la publication — le déploiement continu a refusé de produire la release tant que la dépendance vulnérable était présente.
 - Deux anomalies (BUG-002, BUG-003) relèvent de l'**écosystème de dépendances** plutôt que du code : elles confirment la pertinence de l'épinglage des versions et de `expo-doctor` en CI.
 - Trois anomalies (BUG-004, BUG-005, BUG-008) concernaient le **harnais de tests lui-même** : un test faux ou instable est traité avec la même rigueur qu'un bogue applicatif, car un harnais non fiable annule la valeur de tous les autres tests.
 
