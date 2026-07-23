@@ -5,7 +5,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@hookform/resolvers": "^5.4.0",
-    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query": "^5.101.4",
     "axios": "^1.18.1",
     "expo": "~54.0.36",
     "expo-constants": "~18.0.13",
