@@ -1,0 +1,163 @@
+# Intégration continue — voir docs/03-protocole-integration-continue.md
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [develop, main]
+  workflow_call: # réutilisé par cd.yml avant tout déploiement
+
+jobs:
+  backend:
+    name: Backend — lint, typecheck, tests, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 + cache npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Installation reproductible
+        run: npm ci
+
+      - name: Lint (0 erreur, 0 warning)
+        run: npm run lint -- --max-warnings 0
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests unitaires avec couverture (seuil 80 % bloquant)
+        run: npm run test:cov
+
+      - name: Résumé de couverture
+        if: always()
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            echo "## Couverture backend" >> "$GITHUB_STEP_SUMMARY"
+            node -e "const c=require('./coverage/coverage-summary.json').total; console.log('| Lignes | Branches | Fonctions |'); console.log('|---|---|---|'); console.log(\`| \${c.lines.pct}% | \${c.branches.pct}% | \${c.functions.pct}% |\`)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Build
+        run: npm run build
+
+  backend-e2e:
+    name: Backend — tests e2e API (Supertest + PostgreSQL)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: soundproof
+          POSTGRES_PASSWORD: soundproof_password
+          POSTGRES_DB: soundproof
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U soundproof"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://soundproof:soundproof_password@localhost:5432/soundproof?schema=public
+      JWT_ACCESS_SECRET: ci_secret_access_ephemere
+      JWT_REFRESH_SECRET: ci_secret_refresh_ephemere
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_TTL: 7d
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 + cache npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Installation reproductible
+        run: npm ci
+
+      - name: Migrations Prisma (BDD éphémère)
+        if: hashFiles('backend/prisma/schema.prisma') != ''
+        run: npx prisma migrate deploy
+
+      - name: Tests e2e API
+        run: npm run test:e2e
+
+  mobile:
+    name: Mobile — lint, typecheck, tests, bundle
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 + cache npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Installation reproductible
+        run: npm ci
+
+      - name: Lint (0 erreur, 0 warning)
+        run: npm run lint -- --max-warnings 0
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests unitaires avec couverture (seuil 80 % bloquant)
+        run: npm run test:cov
+
+      - name: Résumé de couverture
+        if: always()
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            echo "## Couverture mobile" >> "$GITHUB_STEP_SUMMARY"
+            node -e "const c=require('./coverage/coverage-summary.json').total; console.log('| Lignes | Branches | Fonctions |'); console.log('|---|---|---|'); console.log(\`| \${c.lines.pct}% | \${c.branches.pct}% | \${c.functions.pct}% |\`)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Santé du projet Expo (expo-doctor)
+        run: npx expo-doctor
+
+      - name: Vérification du bundle Android (expo export)
+        run: npx expo export --platform android
+
+  audit:
+    name: Audit de sécurité des dépendances (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [backend, mobile]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Non bloquant sur les branches de développement, bloquant sur main et sur les tags de version
+      - name: npm audit (niveau high)
+        continue-on-error: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v') }}
+        run: npm audit --audit-level=high

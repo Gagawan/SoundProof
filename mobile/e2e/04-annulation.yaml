@@ -1,0 +1,21 @@
+# TF-015 — Annulation d'une réservation à venir avec confirmation native.
+# Prérequis : marie possède au moins une réservation future (seed ou flow 02).
+appId: host.exp.Exponent
+---
+- runFlow: _connexion-membre.yaml
+
+- tapOn: 'Réservations'
+- assertVisible: 'À venir'
+- tapOn: 'À venir'
+
+# Déclencher l'annulation sur la première réservation future
+- tapOn:
+    text: 'Annuler'
+    index: 0
+
+# Dialogue de confirmation natif
+- assertVisible: 'Annuler la réservation ?'
+- tapOn: 'Annuler la réservation'
+
+# Toast de confirmation ; la réservation apparaît désormais « Annulée »
+- assertVisible: 'Annulée'

@@ -1,0 +1,52 @@
+# Déploiement PRODUCTION de l'API — voir docs/01-protocole-deploiement-continu.md
+# et docs/09-manuel-deploiement.md. Requiert un fichier .env (modèle : .env.prod.example).
+#   docker compose -f docker-compose.prod.yml up -d
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    # Aucun port publié : la BDD n'est joignable que par l'API, sur le réseau interne.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER requis}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD requis}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB requis}
+    volumes:
+      - soundproof_db_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  backend:
+    image: ghcr.io/gagawan/soundproof-api:${API_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET requis}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET requis}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+    # L'API est exposée : elle doit être joignable par les téléphones.
+    ports:
+      - '3000:3000'
+    networks:
+      - internal
+      - public
+
+volumes:
+  soundproof_db_prod:
+
+networks:
+  # Réseau interne isolé (BDD ↔ API uniquement)
+  internal:
+    internal: true
+  # Réseau exposé (API ↔ extérieur)
+  public:

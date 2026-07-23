@@ -1,0 +1,119 @@
+name: 🐛 Rapport de bogue
+description: Signaler un dysfonctionnement de l'application mobile ou de l'API
+title: '[BUG] '
+labels: ['bug', 'à qualifier']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de signaler ce bogue. Renseignez le maximum d'informations : elles conditionnent
+        la qualification et la rapidité de correction (voir `docs/08-plan-correction-bogues.md`).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Résumé clair du problème constaté.
+      placeholder: "Lors de la confirmation d'une réservation, l'application affiche…"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes de reproduction
+      description: Étapes numérotées, précises, permettant de reproduire le problème à coup sûr.
+      placeholder: |
+        1. Se connecter avec le compte …
+        2. Ouvrir la salle « Studio A »
+        3. Sélectionner le créneau 14:00 → 15:30
+        4. Toucher « Confirmer la réservation »
+    validations:
+      required: true
+
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Comportement attendu
+      placeholder: 'La réservation est créée et apparaît dans « Mes réservations ».'
+    validations:
+      required: true
+
+  - type: textarea
+    id: observe
+    attributes:
+      label: Comportement observé
+      placeholder: "Un message d'erreur « … » s'affiche et la réservation n'est pas créée."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: gravite
+    attributes:
+      label: Gravité
+      description: |
+        **Bloquant** : fonctionnalité inutilisable, perte de données, faille de sécurité.
+        **Majeur** : fonctionnalité dégradée sans contournement simple.
+        **Mineur** : gêne ponctuelle avec contournement.
+        **Cosmétique** : affichage, libellé, alignement.
+      options:
+        - Bloquant
+        - Majeur
+        - Mineur
+        - Cosmétique
+    validations:
+      required: true
+
+  - type: dropdown
+    id: composant
+    attributes:
+      label: Composant concerné
+      options:
+        - Application mobile
+        - API (backend)
+        - Infrastructure / CI-CD
+        - Indéterminé
+    validations:
+      required: true
+
+  - type: input
+    id: appareil
+    attributes:
+      label: Appareil
+      placeholder: 'Ex. : Samsung Galaxy A52 / émulateur Pixel 7'
+    validations:
+      required: true
+
+  - type: input
+    id: android
+    attributes:
+      label: Version d'Android
+      placeholder: 'Ex. : Android 14'
+    validations:
+      required: true
+
+  - type: input
+    id: version-app
+    attributes:
+      label: Version de l'application
+      description: Visible dans `app.json` ou sur la page de la GitHub Release de l'APK installé.
+      placeholder: 'Ex. : 0.4.0 (APK preview) ou Expo Go (dev)'
+    validations:
+      required: true
+
+  - type: textarea
+    id: captures
+    attributes:
+      label: Captures d'écran / logs
+      description: Glissez-déposez vos captures. Pour l'API, joignez les logs pertinents (sans donnée sensible).
+    validations:
+      required: false
+
+  - type: input
+    id: test-recette
+    attributes:
+      label: Test de recette associé
+      description: Si le bogue provient de l'exécution du cahier de recettes, indiquer l'identifiant du scénario.
+      placeholder: 'Ex. : TF-011'
+    validations:
+      required: false
