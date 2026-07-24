@@ -11,7 +11,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getRoom } from '@/api/rooms';
 import { EmptyState } from '@/components/EmptyState';
@@ -26,6 +26,7 @@ const MESSAGE_MAX_LENGTH = 1000;
 export default function RoomChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAuth();
+  const insets = useSafeAreaInsets();
   const [draft, setDraft] = useState('');
 
   const roomQuery = useQuery({ queryKey: ['rooms', id], queryFn: () => getRoom(id) });
@@ -55,9 +56,9 @@ export default function RoomChatScreen() {
           title: roomQuery.data ? `Chat — ${roomQuery.data.name}` : 'Chat',
         }}
       />
-      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <View style={styles.safeArea}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.flex}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
@@ -93,7 +94,7 @@ export default function RoomChatScreen() {
             />
           )}
 
-          <View style={styles.composer}>
+          <View style={[styles.composer, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
             <TextInput
               accessibilityLabel="Votre message"
               placeholder="Votre message…"
@@ -118,7 +119,7 @@ export default function RoomChatScreen() {
             </Pressable>
           </View>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </View>
     </>
   );
 }
