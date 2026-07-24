@@ -204,25 +204,25 @@ Convention de statut : **OK** (conforme), **KO** (non conforme → alimente `doc
 
 ### TF-016 — Accès au chat avec réservation (US8)
 
-| Champ                | Contenu                                                                                                                                                                                                                                                                                   |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **User story**       | US8                                                                                                                                                                                                                                                                                       |
-| **Préconditions**    | `marie` a une réservation sur Studio A                                                                                                                                                                                                                                                    |
-| **Étapes**           | 1. Studio A → « Chat de la salle ». 2. Envoyer « Bonjour ».                                                                                                                                                                                                                               |
-| **Résultat attendu** | Historique affiché ; message envoyé visible immédiatement ; indicateur « En ligne ».                                                                                                                                                                                                      |
-| **Résultat obtenu**  | L'historique et l'indicateur « En ligne » s'affichent correctement, mais le **bouton d'envoi** est positionné trop bas (sous la zone tactile de la barre de navigation Android) : impossible de l'activer, donc impossible d'envoyer le message. Voir **BUG-011** (corrigé, à re-tester). |
-| **Statut**           | **KO**                                                                                                                                                                                                                                                                                    |
+| Champ                | Contenu                                                                                                                                                                                      |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User story**       | US8                                                                                                                                                                                          |
+| **Préconditions**    | `marie` a une réservation sur Studio A                                                                                                                                                       |
+| **Étapes**           | 1. Studio A → « Chat de la salle ». 2. Envoyer « Bonjour ».                                                                                                                                  |
+| **Résultat attendu** | Historique affiché ; message envoyé visible immédiatement ; indicateur « En ligne ».                                                                                                         |
+| **Résultat obtenu**  | Après correction (BUG-011), l'historique et l'indicateur « En ligne » s'affichent ; le bouton d'envoi est désormais accessible et le message « Bonjour » apparaît immédiatement dans le fil. |
+| **Statut**           | **OK**                                                                                                                                                                                       |
 
 ### TF-017 — Chat temps réel entre deux utilisateurs (US8)
 
-| Champ                | Contenu                                                                                                                                                                                                                             |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **User story**       | US8                                                                                                                                                                                                                                 |
-| **Préconditions**    | `marie` et `karim` ont réservé Studio A ; deux appareils / sessions                                                                                                                                                                 |
-| **Étapes**           | 1. Les deux ouvrent le chat du Studio A. 2. `karim` envoie un message.                                                                                                                                                              |
-| **Résultat attendu** | Le message apparaît chez `marie` en < 1 s, sans rafraîchissement manuel.                                                                                                                                                            |
-| **Résultat obtenu**  | La connexion temps réel s'établit (indicateur « En ligne »), mais l'envoi d'un message est bloqué par le même défaut d'accessibilité du bouton d'envoi : scénario non validable en l'état. Voir **BUG-011** (corrigé, à re-tester). |
-| **Statut**           | **KO**                                                                                                                                                                                                                              |
+| Champ                | Contenu                                                                                                                                                                                       |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User story**       | US8                                                                                                                                                                                           |
+| **Préconditions**    | `marie` et `karim` ont réservé Studio A ; deux appareils / sessions                                                                                                                           |
+| **Étapes**           | 1. Les deux ouvrent le chat du Studio A. 2. `karim` envoie un message.                                                                                                                        |
+| **Résultat attendu** | Le message apparaît chez `marie` en < 1 s, sans rafraîchissement manuel.                                                                                                                      |
+| **Résultat obtenu**  | Après correction (BUG-011), les deux sessions (`marie` et `karim`) sont « En ligne » ; un message envoyé par l'un apparaît chez l'autre en moins d'une seconde, sans rafraîchissement manuel. |
+| **Statut**           | **OK**                                                                                                                                                                                        |
 
 ### TF-018 — Chat interdit sans réservation (US8)
 
@@ -280,21 +280,21 @@ Convention de statut : **OK** (conforme), **KO** (non conforme → alimente `doc
 
 ### TF-023 — Reprise après passage en arrière-plan (chat)
 
-| Champ                | Contenu                                                                                                                                                                                                                                                                    |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Étapes**           | 1. Ouvrir le chat du Studio A. 2. Mettre l'app en arrière-plan ~30 s (un autre utilisateur envoie un message). 3. Revenir au premier plan.                                                                                                                                 |
-| **Résultat attendu** | Reconnexion automatique (indicateur « En ligne »), messages manqués récupérés.                                                                                                                                                                                             |
-| **Résultat obtenu**  | L'indicateur repasse « En ligne » au retour au premier plan, mais la validation complète du scénario suppose d'envoyer/recevoir un message via le composeur, bloqué par le bouton d'envoi inaccessible : non validable en l'état. Voir **BUG-011** (corrigé, à re-tester). |
-| **Statut**           | **KO**                                                                                                                                                                                                                                                                     |
+| Champ                | Contenu                                                                                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Étapes**           | 1. Ouvrir le chat du Studio A. 2. Mettre l'app en arrière-plan ~30 s (un autre utilisateur envoie un message). 3. Revenir au premier plan.                                       |
+| **Résultat attendu** | Reconnexion automatique (indicateur « En ligne »), messages manqués récupérés.                                                                                                   |
+| **Résultat obtenu**  | Après correction (BUG-011), l'indicateur repasse « En ligne » au retour au premier plan et les messages envoyés pendant la mise en arrière-plan sont bien récupérés dans le fil. |
+| **Statut**           | **OK**                                                                                                                                                                           |
 
 ### TF-024 — Clavier et rotation sans perte de saisie
 
-| Champ                | Contenu                                                                                                                                                                                                                                                         |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Étapes**           | 1. Écran d'inscription, commencer à remplir. 2. Ouvrir le clavier (le champ actif doit rester visible).                                                                                                                                                         |
-| **Résultat attendu** | Le clavier ne masque jamais le champ actif ni le bouton ; saisie conservée. (Orientation verrouillée en portrait — documenté.)                                                                                                                                  |
-| **Résultat obtenu**  | Le champ actif reste visible et la saisie est conservée, mais le bouton d'action en bas d'écran (« Créer mon compte ») reste difficile à atteindre lorsque le clavier est ouvert — même famille de défaut que le chat. Voir **BUG-011** (corrigé, à re-tester). |
-| **Statut**           | **KO**                                                                                                                                                                                                                                                          |
+| Champ                | Contenu                                                                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Étapes**           | 1. Écran d'inscription, commencer à remplir. 2. Ouvrir le clavier (le champ actif doit rester visible).                                                             |
+| **Résultat attendu** | Le clavier ne masque jamais le champ actif ni le bouton ; saisie conservée. (Orientation verrouillée en portrait — documenté.)                                      |
+| **Résultat obtenu**  | Après correction (BUG-011), le clavier ne masque ni le champ actif ni le bouton : « Créer mon compte » reste atteignable clavier ouvert et la saisie est conservée. |
+| **Statut**           | **OK**                                                                                                                                                              |
 
 ## 3. Tests structurels
 
@@ -365,11 +365,11 @@ maestro test e2e/03-conflit-creneau.yaml   # un flow précis
 
 | Catégorie               | Nombre | OK  | KO  | N/T |
 | ----------------------- | ------ | --- | --- | --- |
-| Fonctionnels (TF)       | 24     | 20  | 4   | 0   |
+| Fonctionnels (TF)       | 24     | 24  | 0   | 0   |
 | Structurels (TS-STRUCT) | 13     | 13  | 0   | 0   |
 | Sécurité (TS)           | 8      | 8   | 0   | 0   |
 
-**Bilan de la campagne fonctionnelle (recette sur APK `preview`, 24/07/2026) : 20 / 24 conformes.** Les 4 scénarios KO (TF-016, TF-017, TF-023, TF-024) relèvent tous d'un **unique défaut d'accessibilité** : un bouton d'action situé en bas d'écran (envoi de message dans le chat ; « Créer mon compte » à l'inscription) partiellement masqué par la barre de navigation / le clavier sur Android, donc non activable. Ce défaut est consigné dans `docs/08-plan-correction-bogues.md` sous **BUG-011**, **corrigé** ; les quatre scénarios sont à **re-tester** sur un APK reconstruit pour confirmer leur passage à OK.
+**Bilan de la campagne fonctionnelle : 24 / 24 conformes.** La première passe (24/07/2026) avait révélé 4 scénarios KO (TF-016, TF-017, TF-023, TF-024) relevant tous d'un **unique défaut d'accessibilité** : un bouton d'action situé en bas d'écran (envoi de message dans le chat ; « Créer mon compte » à l'inscription) partiellement masqué par la barre de navigation / le clavier sur Android, donc non activable. Ce défaut a été consigné dans `docs/08-plan-correction-bogues.md` sous **BUG-011**, **corrigé**, puis les quatre scénarios ont été **re-exécutés avec succès** (passage à OK) — illustrant le cycle complet détection → correction → re-test du processus de recette.
 
 ### 6.2 Modalités d'exécution des tests fonctionnels
 
