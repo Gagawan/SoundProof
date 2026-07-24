@@ -13,6 +13,7 @@ Correctif issu de la recette fonctionnelle exécutée sur appareil réel.
 ### Corrigé
 
 - **BUG-011** : les boutons d'action situés en bas d'écran (envoi de message dans le chat, « Créer mon compte » à l'inscription) n'étaient pas activables sur Android, masqués par la barre de navigation système / le clavier. Prise en compte des insets système sur la barre de composition du chat et ajustement du `KeyboardAvoidingView` sur Android (`chat.tsx`, `login.tsx`, `register.tsx`).
+- **BUG-012** : vulnérabilité **haute** `postcss` (dépendance transitive de l'outillage de build Expo) bloquant l'audit de sécurité de la CD. Corrigée par un `overrides` npm forçant `postcss` en 8.5.x, sans montée de SDK (qui aurait cassé la compatibilité de l'appareil de test). Audit `--audit-level=high` : 0 vulnérabilité haute.
 
 ### Modifié
 
