@@ -14,7 +14,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api-demo.soundproof.example"
+        "EXPO_PUBLIC_API_URL": "https://soundproof-api.onrender.com"
       }
     },
     "production": {
