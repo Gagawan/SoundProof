@@ -44,7 +44,7 @@ export default function RegisterScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flex}
       >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">

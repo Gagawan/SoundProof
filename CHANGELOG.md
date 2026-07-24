@@ -6,6 +6,19 @@ Le format s'appuie sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) 
 
 > **Note sur l'historique des versions** — le projet a été construit **par couches** (environnement et CI/CD, puis conception, puis API complète, puis application mobile, puis durcissement et recette) plutôt que par tranches verticales. Les versions ci-dessous reflètent cet historique réel ; chaque version correspond à un **tag git** posé sur le commit d'intégration correspondant.
 
+## [1.0.1] — 2026-07-24
+
+Correctif issu de la recette fonctionnelle exécutée sur appareil réel.
+
+### Corrigé
+
+- **BUG-011** : les boutons d'action situés en bas d'écran (envoi de message dans le chat, « Créer mon compte » à l'inscription) n'étaient pas activables sur Android, masqués par la barre de navigation système / le clavier. Prise en compte des insets système sur la barre de composition du chat et ajustement du `KeyboardAvoidingView` sur Android (`chat.tsx`, `login.tsx`, `register.tsx`).
+
+### Modifié
+
+- **Cahier de recettes** (`docs/07`) : campagne fonctionnelle ré-exécutée après correction — **24/24 scénarios conformes** (TF-016, TF-017, TF-023, TF-024 repassent OK) ; illustration du cycle détection → correction → re-test.
+- **Plan de correction des bogues** (`docs/08`) : BUG-011 consigné et vérifié.
+
 ## [1.0.0] — 2026-07-14
 
 Première version stable : application complète, recette exécutée et documentation d'exploitation livrée.
@@ -13,7 +26,7 @@ Première version stable : application complète, recette exécutée et document
 ### Ajouté
 
 - **Cahier de recettes** (`docs/07`) : 24 scénarios fonctionnels, 13 tests structurels, 8 tests de sécurité (exécutés : 8/8 OK) ; flows **Maestro** automatisant 6 parcours clés (`mobile/e2e/`).
-- **Plan de correction des bogues** (`docs/08`) : processus de qualification et de traitement, registre des 9 anomalies rencontrées avec analyse de cause racine ; **template GitHub** de rapport de bogue.
+- **Plan de correction des bogues** (`docs/08`) : processus de qualification et de traitement, registre des 10 anomalies rencontrées avec analyse de cause racine ; **template GitHub** de rapport de bogue.
 - **Documentation d'exploitation** : manuel de déploiement (`docs/09`), manuel d'utilisation (`docs/10`), manuel de mise à jour (`docs/11`).
 - README final (badges, correspondance compétences ↔ livrables, liens vers les 11 documents).
 
@@ -75,6 +88,7 @@ Socle technique du projet.
 - **Protocoles d'intégration et de déploiement continus** (`docs/01`, `docs/03`) et **critères de qualité/performance** (`docs/02`).
 - Pipelines GitHub Actions (`ci.yml`, `cd.yml`), Dockerfile multi-stage de l'API, configuration EAS Build et Docker Compose de production.
 
+[1.0.1]: https://github.com/Gagawan/SoundProof/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Gagawan/SoundProof/releases/tag/v1.0.0
 [0.5.0]: https://github.com/Gagawan/SoundProof/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Gagawan/SoundProof/releases/tag/v0.4.0
